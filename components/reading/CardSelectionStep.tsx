@@ -60,7 +60,7 @@ export function CardSelectionStep({
               whileTap={disabled ? undefined : tapScale}
               transition={springSnappy}
               className={cn(
-                "group relative flex aspect-[2/3] cursor-pointer flex-col items-center justify-center rounded-sm border-2 transition-colors duration-200 sm:gap-1 sm:p-1.5",
+                "group relative flex aspect-[2/3] cursor-pointer flex-col items-center justify-center rounded-xl border-2 transition-colors duration-200 sm:gap-1 sm:p-1.5",
                 "border-parchment-border/60 p-0.5",
                 "disabled:cursor-not-allowed disabled:opacity-30",
                 isSelected

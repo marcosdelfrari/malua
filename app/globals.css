@@ -82,3 +82,17 @@ button:not(:disabled),
 .scrollbar-medieval::-webkit-scrollbar-thumb:hover {
   background: rgba(201, 162, 39, 0.6);
 }
+
+@layer components {
+  .border-card {
+    @apply rounded-4xl border-2 border-parchment-border/70;
+  }
+
+  .border-card-gold {
+    @apply rounded-4xl border-2 border-gold-dark/40;
+  }
+
+  .rounded-btn {
+    @apply rounded-2xl;
+  }
+}

@@ -63,16 +63,16 @@ export function QuestionStep({
               whileTap={tapScale}
               transition={springSnappy}
               className={cn(
-                "flex w-full shrink-0 cursor-pointer items-center gap-3 rounded-md border-[3px] p-4 text-left transition-colors duration-200 sm:gap-4 sm:rounded-sm sm:border-2 sm:p-4",
+                "border-card flex w-full shrink-0 cursor-pointer items-center gap-3 p-4 text-left transition-colors duration-200 sm:gap-4 sm:p-4",
                 "hover:border-gold-dark/70 hover:bg-gold/10",
                 isSelected
                   ? "border-gold-dark bg-gold/20 ring-2 ring-gold-dark/20"
-                  : "border-parchment-border/70 bg-parchment-border/8"
+                  : "bg-parchment-border/8"
               )}
             >
               <div
                 className={cn(
-                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[2.5px] transition-colors sm:h-8 sm:w-8 sm:border-2",
+                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 transition-colors sm:h-8 sm:w-8",
                   isSelected
                     ? "border-gold-dark text-gold-dark"
                     : "border-parchment-border text-ink-muted"

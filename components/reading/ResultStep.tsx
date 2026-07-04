@@ -55,7 +55,7 @@ function CardReveal({
       variants={cardRevealVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-4 rounded-md border-[3px] border-parchment-border/70 bg-parchment-border/10 p-5 sm:rounded-sm sm:border-2 sm:border-parchment-border/60 sm:p-6"
+      className="border-card space-y-4 bg-parchment-border/10 p-5 sm:p-6"
     >
       <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
         <motion.div
@@ -65,7 +65,7 @@ function CardReveal({
           className="flex w-full shrink-0 flex-col items-center gap-2 border-b border-parchment-border/30 pb-4 sm:w-auto sm:border-b-0 sm:pb-0"
           style={{ perspective: 800 }}
         >
-          <div className="flex h-20 w-16 items-center justify-center rounded-md border-[3px] border-gold-dark bg-gold/15 sm:h-20 sm:w-14 sm:rounded-sm sm:border-2">
+          <div className="flex h-20 w-16 items-center justify-center rounded-2xl border-2 border-gold-dark bg-gold/15 sm:h-20 sm:w-14">
             <Icon className="h-7 w-7 text-gold-dark sm:h-8 sm:w-8" />
           </div>
           <span className="max-w-[140px] text-center text-[10px] uppercase leading-tight tracking-wider text-gold-dark/80">
@@ -84,7 +84,7 @@ function CardReveal({
           <p className="text-sm leading-relaxed text-ink">
             {card.meaning.upright}
           </p>
-          <p className="rounded-md border-l-[3px] border-gold-dark/40 bg-gold/5 px-4 py-3 text-left text-sm italic leading-relaxed text-ink-light sm:border-l-2 sm:bg-transparent sm:px-0 sm:py-0 sm:pl-4">
+          <p className="rounded-2xl border-l-2 border-gold-dark/40 bg-gold/5 px-4 py-3 text-left text-sm italic leading-relaxed text-ink-light sm:bg-transparent sm:px-0 sm:py-0 sm:pl-4">
             {card.meaning.contextual[themeId]}
           </p>
         </div>
@@ -141,7 +141,7 @@ export function ResultStep({
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.15 }}
-        className="relative rounded-md border-2 border-gold-dark/30 bg-gold/10 px-5 py-5 text-center sm:rounded-sm sm:px-6 sm:py-4"
+        className="border-card-gold relative bg-gold/10 px-5 py-5 text-center sm:px-6 sm:py-4"
       >
         <span className="absolute top-1 left-3 font-medieval text-2xl text-gold-dark/40">
           &ldquo;
@@ -159,7 +159,7 @@ export function ResultStep({
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.25 }}
-        className="rounded-md border-[3px] border-gold-dark/30 bg-parchment-border/10 p-5 sm:rounded-sm sm:border-2 sm:p-5"
+        className="border-card-gold bg-parchment-border/10 p-5 sm:p-5"
       >
         <h3 className="mb-4 font-medieval text-sm uppercase tracking-widest text-gold-dark">
           Visão Geral do Conjunto

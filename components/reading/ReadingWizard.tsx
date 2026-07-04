@@ -174,7 +174,7 @@ export function ReadingWizard() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 8 }}
                 transition={{ duration: 0.25 }}
-                className="mt-4 flex shrink-0 items-center justify-between border-t-2 border-parchment-border/40 pt-4 sm:mt-5 sm:pt-5"
+                className="mt-4 flex shrink-0 items-center justify-between border-t border-parchment-border/40 pt-4 sm:mt-5 sm:pt-5"
               >
                 <MedievalButton
                   variant="ghost"

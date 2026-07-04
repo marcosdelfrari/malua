@@ -16,8 +16,7 @@ export function MedievalFrame({ children, className }: MedievalFrameProps) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
       className={cn(
-        "relative rounded-md border-[3px] border-parchment-border/70 bg-parchment text-ink shadow-medieval sm:rounded-sm sm:border-2 sm:border-parchment-border/60",
-        "before:pointer-events-none before:absolute before:inset-2.5 before:rounded-sm before:border-2 before:border-gold/25 sm:before:inset-2 sm:before:border",
+        "relative border-card bg-parchment text-ink shadow-medieval",
         className
       )}
     >
@@ -47,7 +46,7 @@ export function MedievalButton({
       whileHover={disabled ? undefined : { scale: 1.02 }}
       transition={springSnappy}
       className={cn(
-        "font-medieval rounded-sm border-2 text-sm uppercase tracking-widest transition-colors duration-200",
+        "font-medieval rounded-btn border-2 text-sm uppercase tracking-widest transition-colors duration-200",
         "px-6 py-3",
         "disabled:cursor-not-allowed disabled:opacity-40",
         variant === "primary" &&
@@ -95,21 +94,21 @@ export function OptionCard({
         "group flex w-full cursor-pointer transition-colors duration-200",
         compact
           ? cn(
-              "gap-4 rounded-md border-[3px] p-4 sm:rounded-sm sm:border-2 sm:p-6",
+              "gap-4 border-card p-4 sm:p-6",
               stackOnMobile
                 ? "flex-row items-center sm:h-full sm:flex-col sm:items-center sm:justify-center sm:gap-3"
                 : "h-full flex-col items-center justify-center gap-2 sm:gap-3"
             )
-          : "flex-col items-center justify-center gap-3 rounded-md border-[3px] p-6 sm:rounded-sm sm:border-2",
+          : "flex-col items-center justify-center gap-3 border-card p-6",
         "hover:border-gold-dark/70 hover:bg-gold/10",
         selected
           ? "border-gold-dark bg-gold/20 ring-2 ring-gold-dark/20"
-          : "border-parchment-border/70 bg-parchment-border/8"
+          : "bg-parchment-border/8"
       )}
     >
       <div
         className={cn(
-          "flex shrink-0 items-center justify-center rounded-full border-[2.5px] transition-colors sm:border-2",
+          "flex shrink-0 items-center justify-center rounded-full border-2 transition-colors",
           compact
             ? stackOnMobile
               ? "h-12 w-12 sm:h-14 sm:w-14"
