@@ -1,4 +1,8 @@
+"use client";
+
+import { motion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { springSnappy, tapScale } from "@/lib/motion";
 
 interface MedievalFrameProps {
   children: React.ReactNode;
@@ -7,23 +11,25 @@ interface MedievalFrameProps {
 
 export function MedievalFrame({ children, className }: MedievalFrameProps) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
       className={cn(
-        "relative rounded-sm border-2 border-parchment-border/60 bg-parchment text-ink shadow-medieval",
-        "before:absolute before:inset-2 before:rounded-sm before:border before:border-gold/25 before:pointer-events-none",
+        "relative rounded-md border-[3px] border-parchment-border/70 bg-parchment text-ink shadow-medieval sm:rounded-sm sm:border-2 sm:border-parchment-border/60",
+        "before:pointer-events-none before:absolute before:inset-2.5 before:rounded-sm before:border-2 before:border-gold/25 sm:before:inset-2 sm:before:border",
         className
       )}
     >
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4">
-        <span className="text-gold-dark text-lg">❧</span>
+        <span className="text-lg text-gold-dark">❧</span>
       </div>
       {children}
-    </div>
+    </motion.div>
   );
 }
 
-interface MedievalButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface MedievalButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
   variant?: "primary" | "secondary" | "ghost";
 }
 
@@ -35,12 +41,15 @@ export function MedievalButton({
   ...props
 }: MedievalButtonProps) {
   return (
-    <button
+    <motion.button
       disabled={disabled}
+      whileTap={disabled ? undefined : tapScale}
+      whileHover={disabled ? undefined : { scale: 1.02 }}
+      transition={springSnappy}
       className={cn(
-        "font-medieval text-sm uppercase tracking-widest transition-all duration-200",
-        "px-6 py-3 rounded-sm border-2",
-        "disabled:opacity-40 disabled:cursor-not-allowed",
+        "font-medieval rounded-sm border-2 text-sm uppercase tracking-widest transition-colors duration-200",
+        "px-6 py-3",
+        "disabled:cursor-not-allowed disabled:opacity-40",
         variant === "primary" &&
           "border-gold-dark bg-gold/15 text-gold-dark hover:bg-gold/30 hover:shadow-glow",
         variant === "secondary" &&
@@ -52,7 +61,7 @@ export function MedievalButton({
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   );
 }
 
@@ -63,6 +72,8 @@ interface OptionCardProps {
   label: string;
   description?: string;
   compact?: boolean;
+  /** Empilha ícone + texto na horizontal no mobile */
+  stackOnMobile?: boolean;
 }
 
 export function OptionCard({
@@ -72,27 +83,37 @@ export function OptionCard({
   label,
   description,
   compact = false,
+  stackOnMobile = false,
 }: OptionCardProps) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onClick}
+      whileTap={tapScale}
+      transition={springSnappy}
       className={cn(
-        "group flex cursor-pointer flex-col items-center justify-center transition-all duration-200",
+        "group flex w-full cursor-pointer transition-colors duration-200",
         compact
-          ? "h-full gap-1.5 rounded-sm border-2 p-2 sm:gap-3 sm:p-6"
-          : "gap-3 rounded-sm border-2 p-6",
+          ? cn(
+              "gap-4 rounded-md border-[3px] p-4 sm:rounded-sm sm:border-2 sm:p-6",
+              stackOnMobile
+                ? "flex-row items-center sm:h-full sm:flex-col sm:items-center sm:justify-center sm:gap-3"
+                : "h-full flex-col items-center justify-center gap-2 sm:gap-3"
+            )
+          : "flex-col items-center justify-center gap-3 rounded-md border-[3px] p-6 sm:rounded-sm sm:border-2",
         "hover:border-gold-dark/70 hover:bg-gold/10",
         selected
-          ? "border-gold-dark bg-gold/20 shadow-glow"
+          ? "border-gold-dark bg-gold/20 ring-2 ring-gold-dark/20"
           : "border-parchment-border/70 bg-parchment-border/8"
       )}
     >
       <div
         className={cn(
-          "flex items-center justify-center rounded-full border-2 transition-colors",
+          "flex shrink-0 items-center justify-center rounded-full border-[2.5px] transition-colors sm:border-2",
           compact
-            ? "h-9 w-9 sm:h-14 sm:w-14"
+            ? stackOnMobile
+              ? "h-12 w-12 sm:h-14 sm:w-14"
+              : "h-10 w-10 sm:h-14 sm:w-14"
             : "h-14 w-14",
           selected
             ? "border-gold-dark bg-gold/15 text-gold-dark"
@@ -101,25 +122,40 @@ export function OptionCard({
       >
         {icon}
       </div>
-      <span
+      <div
         className={cn(
-          "font-medieval text-center leading-tight",
-          compact ? "text-[10px] sm:text-base" : "text-base",
-          selected ? "text-gold-dark" : "text-ink"
+          "min-w-0",
+          stackOnMobile && "flex-1 text-left sm:flex-none sm:text-center"
         )}
       >
-        {label}
-      </span>
-      {description && (
         <span
           className={cn(
-            "text-center leading-snug text-ink-muted",
-            compact ? "hidden text-[10px] sm:block sm:text-xs" : "text-xs"
+            "font-medieval block leading-tight",
+            compact
+              ? stackOnMobile
+                ? "text-sm sm:text-base"
+                : "text-xs sm:text-base"
+              : "text-base",
+            selected ? "text-gold-dark" : "text-ink"
           )}
         >
-          {description}
+          {label}
         </span>
-      )}
-    </button>
+        {description && (
+          <span
+            className={cn(
+              "mt-1 block leading-snug text-ink-muted",
+              compact
+                ? stackOnMobile
+                  ? "text-xs sm:mt-0 sm:text-xs"
+                  : "hidden text-[10px] sm:block sm:text-xs"
+                : "text-xs"
+            )}
+          >
+            {description}
+          </span>
+        )}
+      </div>
+    </motion.button>
   );
 }

@@ -1,13 +1,15 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Heart, Briefcase, Home } from "lucide-react";
 import { themes, type ThemeId } from "@/lib/data/themes";
+import { fadeInUp, staggerContainer, staggerItem } from "@/lib/motion";
 import { OptionCard } from "./MedievalUI";
 
 const themeIcons: Record<ThemeId, React.ReactNode> = {
-  relacionamento: <Heart className="h-5 w-5 sm:h-7 sm:w-7" />,
-  trabalho: <Briefcase className="h-5 w-5 sm:h-7 sm:w-7" />,
-  familia: <Home className="h-5 w-5 sm:h-7 sm:w-7" />,
+  relacionamento: <Heart className="h-6 w-6 sm:h-7 sm:w-7" />,
+  trabalho: <Briefcase className="h-6 w-6 sm:h-7 sm:w-7" />,
+  familia: <Home className="h-6 w-6 sm:h-7 sm:w-7" />,
 };
 
 interface ThemeStepProps {
@@ -17,29 +19,41 @@ interface ThemeStepProps {
 
 export function ThemeStep({ selected, onSelect }: ThemeStepProps) {
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2 sm:gap-6">
-      <header className="shrink-0 space-y-0.5 text-center sm:space-y-2">
-        <h2 className="font-medieval text-lg tracking-wide text-gold-dark sm:text-3xl">
+    <div className="flex h-full min-h-0 flex-col gap-4 sm:gap-6">
+      <motion.header
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        className="shrink-0 space-y-1.5 text-center sm:space-y-2"
+      >
+        <h2 className="font-medieval text-xl tracking-wide text-gold-dark sm:text-3xl">
           Escolha seu Tema
         </h2>
-        <p className="mx-auto max-w-md text-[11px] text-ink-muted sm:text-base">
+        <p className="mx-auto max-w-md text-sm text-ink-muted sm:text-base">
           Sobre qual área da sua vida você busca orientação?
         </p>
-      </header>
+      </motion.header>
 
-      <div className="grid min-h-0 flex-1 grid-cols-3 gap-2 sm:gap-4">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        className="grid min-h-0 flex-1 content-center grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-5"
+      >
         {themes.map((theme) => (
-          <OptionCard
-            key={theme.id}
-            selected={selected === theme.id}
-            onClick={() => onSelect(theme.id)}
-            icon={themeIcons[theme.id]}
-            label={theme.label}
-            description={theme.description}
-            compact
-          />
+          <motion.div key={theme.id} variants={staggerItem} className="w-full sm:h-full">
+            <OptionCard
+              selected={selected === theme.id}
+              onClick={() => onSelect(theme.id)}
+              icon={themeIcons[theme.id]}
+              label={theme.label}
+              description={theme.description}
+              compact
+              stackOnMobile
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

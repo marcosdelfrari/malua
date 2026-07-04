@@ -1,8 +1,16 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { ScrollText } from "lucide-react";
 import { getTheme, type ThemeId } from "@/lib/data/themes";
 import { cn } from "@/lib/utils";
+import {
+  fadeInUp,
+  springSnappy,
+  staggerContainer,
+  staggerItem,
+  tapScale,
+} from "@/lib/motion";
 
 interface QuestionStepProps {
   themeId: ThemeId;
@@ -19,49 +27,66 @@ export function QuestionStep({
   if (!theme) return null;
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2 sm:gap-6">
-      <header className="shrink-0 space-y-0.5 text-center sm:space-y-2">
-        <p className="text-[10px] uppercase tracking-[0.2em] text-gold-dark/80 sm:text-xs sm:tracking-[0.3em]">
+    <div className="flex h-full min-h-0 flex-col gap-4 sm:gap-6">
+      <motion.header
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        className="shrink-0 space-y-1.5 text-center sm:space-y-2"
+      >
+        <p className="text-xs uppercase tracking-[0.2em] text-gold-dark/80 sm:tracking-[0.3em]">
           {theme.label}
         </p>
-        <h2 className="font-medieval text-lg tracking-wide text-gold-dark sm:text-3xl">
+        <h2 className="font-medieval text-xl tracking-wide text-gold-dark sm:text-3xl">
           Sua Pergunta
         </h2>
-        <p className="mx-auto max-w-md text-[11px] text-ink-muted sm:text-base">
+        <p className="mx-auto max-w-md text-sm text-ink-muted sm:text-base">
           Escolha a pergunta que ressoa com você
         </p>
-      </header>
+      </motion.header>
 
-      <div className="flex min-h-0 flex-1 flex-col justify-center gap-1.5 overflow-hidden sm:gap-2">
-        {theme.questions.map((question, index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={() => onSelect(question)}
-            className={cn(
-              "flex w-full shrink-0 items-center gap-2 rounded-sm border-2 p-2 text-left transition-all duration-200 cursor-pointer sm:gap-4 sm:p-4",
-              "hover:border-gold-dark/70 hover:bg-gold/10",
-              selected === question
-                ? "border-gold-dark bg-gold/20 shadow-glow"
-                : "border-parchment-border/70 bg-parchment-border/8"
-            )}
-          >
-            <div
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        className="flex min-h-0 flex-1 flex-col justify-start gap-3 overflow-y-auto overscroll-contain py-1 scrollbar-medieval sm:gap-3"
+      >
+        {theme.questions.map((question, index) => {
+          const isSelected = selected === question;
+
+          return (
+            <motion.button
+              key={index}
+              type="button"
+              variants={staggerItem}
+              onClick={() => onSelect(question)}
+              whileTap={tapScale}
+              transition={springSnappy}
               className={cn(
-                "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border sm:h-8 sm:w-8",
-                selected === question
-                  ? "border-gold-dark text-gold-dark"
-                  : "border-parchment-border text-ink-muted"
+                "flex w-full shrink-0 cursor-pointer items-center gap-3 rounded-md border-[3px] p-4 text-left transition-colors duration-200 sm:gap-4 sm:rounded-sm sm:border-2 sm:p-4",
+                "hover:border-gold-dark/70 hover:bg-gold/10",
+                isSelected
+                  ? "border-gold-dark bg-gold/20 ring-2 ring-gold-dark/20"
+                  : "border-parchment-border/70 bg-parchment-border/8"
               )}
             >
-              <ScrollText className="h-3 w-3 sm:h-4 sm:w-4" />
-            </div>
-            <span className="text-[11px] leading-snug text-ink sm:text-base sm:leading-relaxed">
-              {question}
-            </span>
-          </button>
-        ))}
-      </div>
+              <div
+                className={cn(
+                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[2.5px] transition-colors sm:h-8 sm:w-8 sm:border-2",
+                  isSelected
+                    ? "border-gold-dark text-gold-dark"
+                    : "border-parchment-border text-ink-muted"
+                )}
+              >
+                <ScrollText className="h-4 w-4" />
+              </div>
+              <span className="text-sm leading-snug text-ink sm:text-base sm:leading-relaxed">
+                {question}
+              </span>
+            </motion.button>
+          );
+        })}
+      </motion.div>
     </div>
   );
 }

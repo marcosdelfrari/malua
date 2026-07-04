@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import {
   getCardById,
   generateReadingSummary,
@@ -11,6 +12,10 @@ import {
   type SubthemeId,
   type ThemeId,
 } from "@/lib/data/themes";
+import {
+  cardRevealVariants,
+  fadeInUp,
+} from "@/lib/motion";
 import { MedievalButton } from "./MedievalUI";
 import { Sparkles } from "lucide-react";
 
@@ -26,10 +31,12 @@ function CardReveal({
   card,
   position,
   themeId,
+  index,
 }: {
   card: TarotCard;
   position: number;
   themeId: ThemeId;
+  index: number;
 }) {
   const Icon = card.icon;
   const positions = [
@@ -40,33 +47,49 @@ function CardReveal({
     "Resultado / Caminho",
   ];
 
+  const positionLabel = positions[position] ?? `Carta ${position + 1}`;
+
   return (
-    <article className="rounded-sm border-2 border-parchment-border/60 bg-parchment-border/10 p-4 sm:p-5 space-y-3">
-      <div className="flex items-start gap-4">
-        <div className="flex flex-col items-center gap-1 shrink-0">
-          <div className="flex h-16 w-12 sm:h-20 sm:w-14 items-center justify-center rounded-sm border-2 border-gold-dark bg-gold/15">
-            <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-gold-dark" />
+    <motion.article
+      custom={index}
+      variants={cardRevealVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-4 rounded-md border-[3px] border-parchment-border/70 bg-parchment-border/10 p-5 sm:rounded-sm sm:border-2 sm:border-parchment-border/60 sm:p-6"
+    >
+      <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
+        <motion.div
+          initial={{ rotateY: 90, opacity: 0 }}
+          animate={{ rotateY: 0, opacity: 1 }}
+          transition={{ delay: index * 0.12 + 0.2, duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          className="flex w-full shrink-0 flex-col items-center gap-2 border-b border-parchment-border/30 pb-4 sm:w-auto sm:border-b-0 sm:pb-0"
+          style={{ perspective: 800 }}
+        >
+          <div className="flex h-20 w-16 items-center justify-center rounded-md border-[3px] border-gold-dark bg-gold/15 sm:h-20 sm:w-14 sm:rounded-sm sm:border-2">
+            <Icon className="h-7 w-7 text-gold-dark sm:h-8 sm:w-8" />
           </div>
-          <span className="text-[10px] text-gold-dark/80 uppercase tracking-wider">
-            {positions[position] ?? `Carta ${position + 1}`}
+          <span className="max-w-[140px] text-center text-[10px] uppercase leading-tight tracking-wider text-gold-dark/80">
+            {positionLabel}
           </span>
-        </div>
-        <div className="flex-1 min-w-0 space-y-2">
-          <div>
-            <h3 className="font-medieval text-lg text-gold-dark">{card.name}</h3>
+        </motion.div>
+        <div className="min-w-0 flex-1 space-y-3 text-center sm:text-left">
+          <div className="space-y-1">
+            <h3 className="font-medieval text-xl text-gold-dark sm:text-lg">
+              {card.name}
+            </h3>
             <p className="text-xs text-ink-muted">
               {card.keywords.join(" · ")}
             </p>
           </div>
-          <p className="text-sm text-ink leading-relaxed">
+          <p className="text-sm leading-relaxed text-ink">
             {card.meaning.upright}
           </p>
-          <p className="text-sm text-ink-light leading-relaxed italic border-l-2 border-gold-dark/40 pl-3">
+          <p className="rounded-md border-l-[3px] border-gold-dark/40 bg-gold/5 px-4 py-3 text-left text-sm italic leading-relaxed text-ink-light sm:border-l-2 sm:bg-transparent sm:px-0 sm:py-0 sm:pl-4">
             {card.meaning.contextual[themeId]}
           </p>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
@@ -84,60 +107,100 @@ export function ResultStep({
   const summary = generateReadingSummary(themeId, cardIds);
 
   return (
-    <div className="space-y-4 pb-2 sm:space-y-6 sm:pb-4">
-      <header className="text-center space-y-3">
+    <div className="space-y-5 pb-2 sm:space-y-6 sm:pb-4">
+      <motion.header
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        className="space-y-3 text-center"
+      >
         <div className="inline-flex items-center gap-2 text-gold-dark">
-          <Sparkles className="h-5 w-5" />
+          <motion.div
+            animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.1, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Sparkles className="h-5 w-5" />
+          </motion.div>
           <span className="font-medieval text-xs uppercase tracking-[0.4em]">
             Sua Leitura
           </span>
-          <Sparkles className="h-5 w-5" />
+          <motion.div
+            animate={{ rotate: [0, -15, 15, 0], scale: [1, 1.1, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Sparkles className="h-5 w-5" />
+          </motion.div>
         </div>
-        <h2 className="font-medieval text-2xl sm:text-3xl text-gold-dark tracking-wide">
+        <h2 className="font-medieval text-2xl tracking-wide text-gold-dark sm:text-3xl">
           {theme?.label} · {getSubthemeLabel(themeId, subthemeId)}
         </h2>
-      </header>
+      </motion.header>
 
-      <blockquote className="relative px-6 py-4 rounded-sm border border-gold-dark/30 bg-gold/10 text-center">
-        <span className="absolute top-1 left-3 text-gold-dark/40 text-2xl font-medieval">
+      <motion.blockquote
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.15 }}
+        className="relative rounded-md border-2 border-gold-dark/30 bg-gold/10 px-5 py-5 text-center sm:rounded-sm sm:px-6 sm:py-4"
+      >
+        <span className="absolute top-1 left-3 font-medieval text-2xl text-gold-dark/40">
           &ldquo;
         </span>
-        <p className="text-ink italic text-sm sm:text-base leading-relaxed">
+        <p className="text-sm italic leading-relaxed text-ink sm:text-base">
           {question}
         </p>
-        <span className="absolute bottom-0 right-3 text-gold-dark/40 text-2xl font-medieval">
+        <span className="absolute right-3 bottom-0 font-medieval text-2xl text-gold-dark/40">
           &rdquo;
         </span>
-      </blockquote>
+      </motion.blockquote>
 
-      <section className="rounded-sm border-2 border-gold-dark/30 bg-parchment-border/10 p-4 sm:p-5">
-        <h3 className="font-medieval text-sm uppercase tracking-widest text-gold-dark mb-3">
+      <motion.section
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.25 }}
+        className="rounded-md border-[3px] border-gold-dark/30 bg-parchment-border/10 p-5 sm:rounded-sm sm:border-2 sm:p-5"
+      >
+        <h3 className="mb-4 font-medieval text-sm uppercase tracking-widest text-gold-dark">
           Visão Geral do Conjunto
         </h3>
-        <p className="text-ink text-sm sm:text-base leading-relaxed">
+        <p className="text-sm leading-relaxed text-ink sm:text-base">
           {summary}
         </p>
-      </section>
+      </motion.section>
 
-      <section className="space-y-3">
-        <h3 className="font-medieval text-sm uppercase tracking-widest text-gold-dark text-center">
+      <section className="space-y-4">
+        <motion.h3
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 0.35 }}
+          className="text-center font-medieval text-sm uppercase tracking-widest text-gold-dark"
+        >
           Cartas Reveladas
-        </h3>
+        </motion.h3>
         {cards.map((card, index) => (
           <CardReveal
             key={card.id}
             card={card}
             position={index}
             themeId={themeId}
+            index={index}
           />
         ))}
       </section>
 
-      <div className="flex justify-center pt-4">
+      <motion.div
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.6 }}
+        className="flex justify-center pt-4"
+      >
         <MedievalButton onClick={onRestart} variant="secondary">
           Nova Leitura
         </MedievalButton>
-      </div>
+      </motion.div>
     </div>
   );
 }

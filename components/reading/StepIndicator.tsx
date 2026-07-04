@@ -1,6 +1,8 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { springSnappy } from "@/lib/motion";
 
 const STEPS = [
   { number: 1, label: "Tema" },
@@ -26,43 +28,73 @@ export function StepIndicator({ currentStep }: StepIndicatorProps) {
             <li key={step.number} className="flex flex-1 flex-col items-center">
               <div className="flex w-full items-center">
                 {step.number > 1 && (
-                  <div
-                    className={cn(
-                      "h-px flex-1 transition-colors",
-                      isComplete || isActive ? "bg-gold" : "bg-parchment-border"
-                    )}
+                  <motion.div
+                    className="h-px flex-1"
+                    animate={{
+                      backgroundColor:
+                        isComplete || isActive
+                          ? "var(--gold)"
+                          : "var(--parchment-border)",
+                    }}
+                    transition={{ duration: 0.4 }}
                   />
                 )}
-                <div
+                <motion.div
+                  layout
+                  animate={{
+                    scale: isActive ? 1.12 : 1,
+                    backgroundColor: isComplete
+                      ? "var(--gold)"
+                      : isActive
+                        ? "rgba(201, 162, 39, 0.2)"
+                        : "rgba(44, 24, 16, 0.5)",
+                    borderColor: isComplete || isActive
+                      ? "var(--gold)"
+                      : "var(--parchment-border)",
+                    color: isComplete
+                      ? "var(--parchment-dark)"
+                      : isActive
+                        ? "var(--gold)"
+                        : "var(--parchment-muted)",
+                  }}
+                  transition={springSnappy}
                   className={cn(
-                    "relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 font-medieval text-[10px] font-semibold transition-all sm:h-10 sm:w-10 sm:text-sm",
-                    isActive &&
-                      "scale-110 border-gold bg-gold/20 text-gold shadow-glow",
-                    isComplete && "border-gold bg-gold text-parchment-dark",
-                    !isActive &&
-                      !isComplete &&
-                      "border-parchment-border bg-parchment-dark/50 text-parchment-muted"
+                    "relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 font-medieval text-[10px] font-semibold sm:h-10 sm:w-10 sm:text-sm",
+                    isActive && "shadow-glow"
                   )}
                 >
-                  {isComplete ? "✦" : step.number}
-                </div>
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={isComplete ? "complete" : "number"}
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {isComplete ? "✦" : step.number}
+                    </motion.span>
+                  </AnimatePresence>
+                </motion.div>
                 {step.number < STEPS.length && (
-                  <div
-                    className={cn(
-                      "h-px flex-1 transition-colors",
-                      isComplete ? "bg-gold" : "bg-parchment-border"
-                    )}
+                  <motion.div
+                    className="h-px flex-1"
+                    animate={{
+                      backgroundColor: isComplete
+                        ? "var(--gold)"
+                        : "var(--parchment-border)",
+                    }}
+                    transition={{ duration: 0.4 }}
                   />
                 )}
               </div>
-              <span
-                className={cn(
-                  "mt-1.5 hidden text-[10px] uppercase tracking-widest sm:block",
-                  isActive ? "text-gold" : "text-parchment-muted"
-                )}
+              <motion.span
+                animate={{
+                  color: isActive ? "var(--gold)" : "var(--parchment-muted)",
+                }}
+                className="mt-1.5 hidden text-[10px] uppercase tracking-widest sm:block"
               >
                 {step.label}
-              </span>
+              </motion.span>
             </li>
           );
         })}
